@@ -10,8 +10,18 @@ pipeline {
 	stages {
         stage('Build') {
             steps {
-                withMaven(maven: 'Maven 3.5.4') {
+                withMaven(maven: 'maven 3.8.1') {
                     sh 'mvn -s ./settings.xml clean deploy -Djib.httpTimeout=0 -DsendCredentialsOverHttp=true'
+                }
+            }
+        }
+        stage('Push version'){
+            steps {
+                script {
+                    sshagent(['bitbucket_vsbol_ssh']) {
+                        sh "git tag ${VERSION}"
+                        sh "git push --tags --no-verify"
+                    }
                 }
             }
         }
