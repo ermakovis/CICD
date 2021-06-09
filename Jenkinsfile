@@ -1,7 +1,7 @@
 pipeline {
 	agent any
 	environment {
-		NEXUS = getReleaseType(env.BRANCH_NAME)
+		NEXUS = getNexus(env.BRANCH_NAME)
 		RELEASE_TYPE = getReleaseType(env.BRANCH_NAME)
 		DB_CREDENTIALS = credentials('db_cred')
 		REGISTRY_CREDENTIALS = credentials('registry-cred')
@@ -18,7 +18,7 @@ pipeline {
     }
 }
 
-def getReleaseType(branchName) {
+static def getReleaseType(branchName) {
     if(branchName == "develop" || branchName.startsWith("feature/")) {
         return "SNAPSHOT";
     } else if(branchName == "main" || branchName.startsWith("release/")){
@@ -29,7 +29,7 @@ def getReleaseType(branchName) {
     }
 }
 
-def getNexus(branchName) {
+static def getNexus(branchName) {
     if(branchName == "develop" || branchName.startsWith("feature/")) {
         return "10.211.10.55:10004";
     } else if(branchName == "main" || branchName.startsWith("release/")){
