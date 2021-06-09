@@ -7,16 +7,18 @@ pipeline {
 		REGISTRY_CREDENTIALS = credentials('registry-cred')
 		VERSION = getNextVersion(RELEASE_TYPE)
 	}
-    stage('Build') {
-        steps {
-            withMaven(maven: 'Maven 3.5.4') {
-                sh 'mvn -s ./settings.xml clean deploy -Djib.httpTimeout=0 -DsendCredentialsOverHttp=true'
+    stages {
+        stage('Build') {
+            steps {
+                withMaven(maven: 'Maven 3.5.4') {
+                    sh 'mvn -s ./settings.xml clean deploy -Djib.httpTimeout=0 -DsendCredentialsOverHttp=true'
+                }
             }
         }
     }
 }
 
-def getReleaseType(branchName) {
+static def getReleaseType(branchName) {
     if(branchName == "develop" || branchName.startsWith("feature/")) {
         return "SNAPSHOT";
     } else if(branchName == "main" || branchName.startsWith("release/")){
@@ -27,7 +29,7 @@ def getReleaseType(branchName) {
     }
 }
 
-def getNexus(branchName) {
+static def getNexus(branchName) {
     if(branchName == "develop" || branchName.startsWith("feature/")) {
         return "10.211.10.55:10004";
     } else if(branchName == "main" || branchName.startsWith("release/")){
