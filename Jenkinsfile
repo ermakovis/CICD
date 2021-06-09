@@ -23,12 +23,8 @@ pipeline {
         }
         stage('Push version'){
             steps {
-                script {
-                    sshagent(['bitbucket_vsbol_ssh']) {
-                        sh "git tag ${VERSION}"
-                        sh "git push --tags --no-verify"
-                    }
-                }
+                    sh "git tag ${VERSION}"
+                    sh "git push --tags --no-verify"
             }
         }
     }
