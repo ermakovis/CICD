@@ -7,10 +7,11 @@ pipeline {
 		REGISTRY_CREDENTIALS = credentials('registry-cred')
 		VERSION = getNextVersion(RELEASE_TYPE)
 	}
-    stage('Build') {
-        steps {
-            withMaven(maven: 'Maven 3.5.4') {
-                sh 'mvn -s ./settings.xml clean deploy -Djib.httpTimeout=0 -DsendCredentialsOverHttp=true'
+	stages {	
+    		stage('Build') {
+        		steps {
+            			withMaven(maven: 'Maven 3.5.4') {
+                		sh 'mvn -s ./settings.xml clean deploy -Djib.httpTimeout=0 -DsendCredentialsOverHttp=true'
             }
         }
     }
