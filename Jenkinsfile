@@ -7,7 +7,7 @@ pipeline {
 		REGISTRY_CREDENTIALS = credentials('registry-cred')
 		VERSION = getNextVersion(RELEASE_TYPE)
 	}
-    stages {
+	stages {
         stage('Build') {
             steps {
                 withMaven(maven: 'Maven 3.5.4') {
@@ -18,7 +18,7 @@ pipeline {
     }
 }
 
-static def getReleaseType(branchName) {
+def getReleaseType(branchName) {
     if(branchName == "develop" || branchName.startsWith("feature/")) {
         return "SNAPSHOT";
     } else if(branchName == "main" || branchName.startsWith("release/")){
@@ -29,7 +29,7 @@ static def getReleaseType(branchName) {
     }
 }
 
-static def getNexus(branchName) {
+def getNexus(branchName) {
     if(branchName == "develop" || branchName.startsWith("feature/")) {
         return "10.211.10.55:10004";
     } else if(branchName == "main" || branchName.startsWith("release/")){
