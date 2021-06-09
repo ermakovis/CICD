@@ -16,7 +16,7 @@ pipeline {
         stage('Build') {
             steps {
                 withMaven(maven: 'maven 3.8.1') {
-                    sh 'mvn clean deploy -Djib.httpTimeout=0 -DsendCredentialsOverHttp=true'
+                    sh 'mvn clean package -Djib.httpTimeout=0 -DsendCredentialsOverHttp=true'
                 }
             }
         }
