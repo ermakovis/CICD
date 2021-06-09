@@ -10,6 +10,7 @@ pipeline {
 	stages {
         stage('Env') {
             steps {
+                echo "${VERSION}"
                 echo "${REGISTRY_CREDENTIALS_USR}"
             }
         }
