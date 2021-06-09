@@ -10,7 +10,7 @@
     </parent>
     <groupId>ru.ermakovis</groupId>
     <artifactId>cicd</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>${VERSION}</version>
     <name>cicd</name>
     <description>Demo project for Spring Boot</description>
     <properties>
@@ -60,16 +60,52 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.0.0</version>
                 <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
+                    <from>
+                        <image>registry.access.redhat.com/ubi8/openjdk-8-runtime</image>
+                    </from>
+                    <to>
+                        <!--suppress UnresolvedMavenProperty -->
+                        <image>${NEXUS}${project.artifactId}</image>
+                        <tags>
+                            <tag>${project.version}</tag>
+                            <tag>latest</tag>
+                        </tags>
+                        <auth>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <username>${REGISTRY_CREDENTIALS_USR}</username>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <password>${REGISTRY_CREDENTIALS_PSW}</password>
+                        </auth>
+                    </to>
+                    <container>
+                        <jvmFlags>
+                            <jvmFlag>-DDB_URL=jdbc:postgresql://10.211.10.55:45432/postgres</jvmFlag>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <jvmFlag>-DDB_CRED_USR=${DB_CREDENTIALS_USR}</jvmFlag>
+                            <!--suppress UnresolvedMavenProperty -->
+                            <jvmFlag>-DDB_CRED_PWD=${DB_CREDENTIALS_PSW}</jvmFlag>
+                        </jvmFlags>
+                        <ports>
+                            <port>8080</port>
+                        </ports>
+                    </container>
+                    <allowInsecureRegistries>
+                        true
+                    </allowInsecureRegistries>
                 </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
             </plugin>
         </plugins>
     </build>
